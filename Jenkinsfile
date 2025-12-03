@@ -7,38 +7,36 @@ pipeline {
     }
 
     environment {
-        // Docker registry credentials (configured in Jenkins)
         DOCKER_CREDENTIALS = 'docker-registry'  
-        REGISTRY = "docker.io"                     // Docker Hub or your registry
-        IMAGE_NAME = "aminebichiou/dockerimage"   // Image name in your registry
+        REGISTRY = "docker.io"                     
+        IMAGE_NAME = "aminebichiou/devopsimage"   
     }
 
     stages {
 
         stage('GIT Checkout') {
             steps {
+                deleteDir()
                 git branch: 'master',
-                    url: 'https://github.com/AmineBichiou/DockerImage.git'
+                    url: 'https://github.com/AmineBichiou/DevopsImage.git'
             }
         }
 
-        stage('Compile') {
+        stage('Build') {
             steps {
-                sh 'mvn clean compile'
+                sh 'mvn clean package -DskipTests'
             }
         }
 
         stage('Docker Build') {
             steps {
                 script {
-                    // Tag image with commit SHA short version
                     def shortCommit = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
                     def imageTag = "${env.REGISTRY}/${env.IMAGE_NAME}:${shortCommit}"
                     env.IMAGE_TAG = imageTag
 
                     echo "Building Docker image: ${imageTag}"
 
-                    // Build Docker image
                     sh """
                         if [ ! -f Dockerfile ]; then
                             echo "FROM openjdk:17-jdk-slim" > Dockerfile
