@@ -35,11 +35,12 @@ public class EventController {
         return eventService.updateEvent(event);
     }
 
-    
+
     @DeleteMapping("/{id}")
     public void deleteEvent(@PathVariable Long id) {
         eventService.deleteEvent(id);
     }
+    
 
 
 }
