@@ -10,6 +10,7 @@ pipeline {
         DOCKER_CREDENTIALS = 'docker-registry'  
         REGISTRY = "docker.io"                     
         IMAGE_NAME = "aminebichiou/devopsimage"   
+        DOCKER_BUILDKIT = "1"
     }
 
     stages {

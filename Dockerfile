@@ -1,5 +1,5 @@
-# Use Eclipse Temurin OpenJDK 17
-FROM eclipse-temurin:17-jdk-alpine
+# Use Eclipse Temurin JRE 17 (much smaller than JDK)
+FROM eclipse-temurin:17-jre-alpine
 
 # Copy the built JAR from target folder
 COPY target/*.jar app.jar
