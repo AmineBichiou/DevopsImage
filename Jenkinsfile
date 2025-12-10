@@ -39,12 +39,6 @@ pipeline {
                     echo "Building Docker image: ${imageTag}"
 
                     sh """
-                        if [ ! -f Dockerfile ]; then
-                            echo "FROM openjdk:17-jdk-slim" > Dockerfile
-                            echo "COPY target/*.jar app.jar" >> Dockerfile
-                            echo 'ENTRYPOINT ["java","-jar","/app.jar"]' >> Dockerfile
-                        fi
-
                         docker build -t ${imageTag} .
                     """
                 }
