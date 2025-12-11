@@ -7,9 +7,9 @@ pipeline {
     }
 
     environment {
-        DOCKER_CREDENTIALS = 'docker-registry'
-        REGISTRY = "docker.io"
-        IMAGE_NAME = "aminebichiou/devopsimage"
+        DOCKER_CREDENTIALS = 'docker-registry'  
+        REGISTRY = "docker.io"                     
+        IMAGE_NAME = "aminebichiou/devopsimage"   
         DOCKER_BUILDKIT = "1"
     }
 
@@ -28,18 +28,6 @@ pipeline {
                 sh 'mvn clean package -DskipTests'
             }
         }
-
-stage('SonarQube Analysis') {
-    steps {
-        withSonarQubeEnv('MySonarServer') {
-            sh """
-                mvn sonar:sonar \
-                -Dsonar.projectKey=DevOpsImage \
-                -Dsonar.projectName=DevOpsImage
-            """
-        }
-    }
-}
 
         stage('Docker Build') {
             steps {
@@ -71,13 +59,24 @@ stage('SonarQube Analysis') {
             }
         }
     }
+    stage('SonarQube Analysis') {
+    steps {
+        withSonarQubeEnv('MySonarServer') {
+            sh """
+                mvn sonar:sonar \
+                -Dsonar.projectKey=DevOpsImage \
+                -Dsonar.projectName=DevOpsImage
+            """
+        }
+    }
+}
 
     post {
         success {
-            echo "✔ Build, SonarQube, and Docker push completed successfully: ${env.IMAGE_TAG}"
+            echo "Build & Docker image push with sonarqube completed: ${env.IMAGE_TAG}"
         }
         failure {
-            echo "✖ Pipeline failed. Please check logs."
+            echo "Build or Docker or sonarqube step failed!"
         }
     }
 }
