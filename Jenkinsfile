@@ -1,4 +1,4 @@
-so this should work now ? pipeline {
+pipeline {
     agent any
 
     tools {
@@ -14,7 +14,6 @@ so this should work now ? pipeline {
     }
 
     stages {
-
         stage('GIT Checkout') {
             steps {
                 deleteDir()
@@ -29,17 +28,17 @@ so this should work now ? pipeline {
             }
         }
 
-stage('SonarQube Analysis') {
-    steps {
-        withSonarQubeEnv('MySonarServer') {
-            sh """
-                mvn sonar:sonar \
-                -Dsonar.projectKey=DevOpsImage \
-                -Dsonar.projectName=DevOpsImage
-            """
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('MySonarServer') {
+                    sh """
+                        mvn sonar:sonar \
+                        -Dsonar.projectKey=DevOpsImage \
+                        -Dsonar.projectName=DevOpsImage
+                    """
+                }
+            }
         }
-    }
-}
 
         stage('Docker Build') {
             steps {
@@ -50,9 +49,7 @@ stage('SonarQube Analysis') {
 
                     echo "Building Docker image: ${imageTag}"
 
-                    sh """
-                        docker build -t ${imageTag} .
-                    """
+                    sh "docker build -t ${imageTag} ."
                 }
             }
         }
