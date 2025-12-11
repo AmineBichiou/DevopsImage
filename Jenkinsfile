@@ -1,4 +1,4 @@
-pipeline {
+so this should work now ? pipeline {
     agent any
 
     tools {
@@ -7,9 +7,9 @@ pipeline {
     }
 
     environment {
-        DOCKER_CREDENTIALS = 'docker-registry'  
-        REGISTRY = "docker.io"                     
-        IMAGE_NAME = "aminebichiou/devopsimage"   
+        DOCKER_CREDENTIALS = 'docker-registry'
+        REGISTRY = "docker.io"
+        IMAGE_NAME = "aminebichiou/devopsimage"
         DOCKER_BUILDKIT = "1"
     }
 
@@ -28,6 +28,18 @@ pipeline {
                 sh 'mvn clean package -DskipTests'
             }
         }
+
+stage('SonarQube Analysis') {
+    steps {
+        withSonarQubeEnv('MySonarServer') {
+            sh """
+                mvn sonar:sonar \
+                -Dsonar.projectKey=DevOpsImage \
+                -Dsonar.projectName=DevOpsImage
+            """
+        }
+    }
+}
 
         stage('Docker Build') {
             steps {
@@ -59,24 +71,13 @@ pipeline {
             }
         }
     }
-    stage('SonarQube Analysis') {
-    steps {
-        withSonarQubeEnv('MySonarServer') {
-            sh """
-                mvn sonar:sonar \
-                -Dsonar.projectKey=DevOpsImage \
-                -Dsonar.projectName=DevOpsImage
-            """
-        }
-    }
-}
 
     post {
         success {
-            echo "Build & Docker image push with sonarqube completed: ${env.IMAGE_TAG}"
+            echo "✔ Build, SonarQube, and Docker push completed successfully: ${env.IMAGE_TAG}"
         }
         failure {
-            echo "Build or Docker or sonarqube step failed!"
+            echo "✖ Pipeline failed. Please check logs."
         }
     }
 }
