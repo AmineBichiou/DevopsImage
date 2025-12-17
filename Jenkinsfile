@@ -28,17 +28,17 @@ pipeline {
             }
         }
 
-        // stage('SonarQube Analysis') {
-        //     steps {
-        //         withSonarQubeEnv('MySonarServer') {
-        //             sh """
-        //                 mvn sonar:sonar \
-        //                 -Dsonar.projectKey=DevOpsImage \
-        //                 -Dsonar.projectName=DevOpsImage
-        //             """
-        //         }
-        //     }
-        // }
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('MySonarServer') {
+                    sh """
+                        mvn sonar:sonar \
+                        -Dsonar.projectKey=DevOpsImage \
+                        -Dsonar.projectName=DevOpsImage
+                    """
+                }
+            }
+        }
 
         stage('Docker Build') {
             steps {
