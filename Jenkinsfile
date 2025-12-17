@@ -22,9 +22,19 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        // stage('Build') {
+        //     steps {
+        //         sh 'mvn clean package -DskipTests'
+        //     }
+        // }
+        stage('Build & Test') {
             steps {
-                sh 'mvn clean package -DskipTests'
+                sh 'mvn clean verify'
+            }
+            post {
+                always {
+                    junit 'target/surefire-reports/*.xml'
+                }
             }
         }
 
