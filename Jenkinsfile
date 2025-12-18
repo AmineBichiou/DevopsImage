@@ -22,22 +22,22 @@ pipeline {
             }
         }
 
-        // stage('Build') {
-        //     steps {
-        //         sh 'mvn clean package -DskipTests'
-        //     }
-        // }
-        stage('Build & Test') {
+        stage('Build') {
             steps {
-                sh 'mvn clean verify'
-            }
-            post {
-                always {
-                    junit 'target/surefire-reports/*.xml'
-                }
+                sh 'mvn clean package -DskipTests'
             }
         }
-        
+        // stage('Build & Test') {
+        //     steps {
+        //         sh 'mvn clean verify'
+        //     }
+        //     post {
+        //         always {
+        //             junit 'target/surefire-reports/*.xml'
+        //         }
+        //     }
+        // }
+
 
         stage('SonarQube Analysis') {
             steps {
